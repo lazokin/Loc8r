@@ -7,7 +7,4 @@ block content
         h1= title
   .row
     .col-md-6.col-sm-12
-      p
-        | Loc8r was created to help people find the best craft beer near them.
-        | <br /> <br />
-        | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sed lorem ac nisi dignissim accumsan.
+      p !{(content).replace(/\n/g, '<br/>')}

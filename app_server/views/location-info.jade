@@ -1,49 +1,44 @@
 extends layout
 
+include _includes/sharedHTMLfunctions
+
 block content
   .row.page-header
     .col-lg-12
-      h1 Beer Deluxe
+      h1= pageHeader.title
   .row
     .col-xs-12.col-md-9
       .row
         .col-xs-12.col-sm-6
           p.rating
-            span.glyphicon.glyphicon-star
-            span.glyphicon.glyphicon-star
-            span.glyphicon.glyphicon-star
-            span.glyphicon.glyphicon-star-empty
-            span.glyphicon.glyphicon-star-empty
-          p Federation Square Flinders St, Melbourne VIC 3000
+            +outputRating(location.rating)
+          p= location.address
           .panel.panel-primary
             .panel-heading
               h2.panel-title Opening hours
             .panel-body
-              p Monday - Friday : 7:00am - 7:00pm
-              p Saturday : 8:00 am - 5:00pm
-              p Sunday : closed
+              each time in location.openingTimes
+                p
+                  | #{time.days} : 
+                  if time.closed
+                    | closed
+                  else
+                    | #{time.opening} - #{time.closing}
           .panel.panel-primary
             .panel-heading
-              h2.panel-title Beers
+              h2.panel-title Facilities
             .panel-body
-              span.label.label-warning
-                span.glyphicon.glyphicon-ok &nbsp;
-                | Pale Ale
-              | &nbsp;
-              span.label.label-warning
-                span.glyphicon.glyphicon-ok &nbsp;
-                | Amber Ale
-              | &nbsp;
-              span.label.label-warning
-                span.glyphicon.glyphicon-ok &nbsp;
-                | Golden Ale
-              | &nbsp;
+              each facility in location.facilities
+                span.label.label-warning
+                  span.glyphicon.glyphicon-ok
+                  |  &nbsp; #{facility}
+                | &nbsp;
         .col-xs-12.col-sm-6.location-map
           .panel.panel-primary
             .panel-heading
               h2.panel-title Location map
             .panel-body
-              img.img-responsive.img-rounded(src='http://maps.googleapis.com/maps/api/staticmap?center=-37.8175304,144.9688639=17&size=400x350&sensor=false&markers=-37.8175304,144.9688639&scale=2')
+              img.img-responsive.img-rounded(src='http://maps.googleapis.com/maps/api/staticmap?center=#{location.coords.lat},#{location.coords.lng}&size=400x350&sensor=false&markers=#{location.coords.lat},#{location.coords.lng}&scale=2')
       .row
         .col-xs-12
           .panel.panel-primary.review-panel
@@ -51,32 +46,16 @@ block content
               a.btn.btn-default.pull-right(href='/location/review/new') Add review
               h2.panel-title Customer reviews
             .panel-body.review-container
-              .row
-                .reviews
-                  .well.well-sm.review-header
-                    span.rating
-                      span.glyphicon.glyphicon-star
-                      span.glyphicon.glyphicon-star
-                      span.glyphicon.glyphicon-star
-                      span.glyphicon.glyphicon-star
-                      span.glyphicon.glyphicon-star
-                    span.reviewAuthor Nikolce Ambukovski
-                    small.reviewTimestamp 13 December 2015
-                  .col-xs-12
-                    p What a great place. I can't say enough good things about it.
-              .row
-                .reviews
-                  .well.well-sm.review-header
-                    span.rating
-                      span.glyphicon.glyphicon-star
-                      span.glyphicon.glyphicon-star
-                      span.glyphicon.glyphicon-star
-                      span.glyphicon.glyphicon-star-empty
-                      span.glyphicon.glyphicon-star-empty
-                    span.reviewAuthor Nikolce Ambukovski
-                    small.reviewTimestamp 13 December 2015
-                  .col-xs-12
-                    p What a great place. I can't say enough good things about it.
+              each review in location.reviews
+                .row
+                  .reviews
+                    .well.well-sm.review-header
+                      span.rating
+                        +outputRating(review.rating)
+                      span.reviewAuthor #{review.author}
+                      small.reviewTimestamp #{review.timestamp}
+                    .col-xs-12
+                      p !{(review.reviewText).replace(/\n/g, '<br/>')}
     .col-xs-12.col-md-3
-      p.lead Beer Deluxe is on Loc8r because it serves craft beer.
-      p If you've been and you like it - or if you don't - please leave a review to help other people just like you.
+      p.lead #{location.name} #{sidebar.context}
+      p= sidebar.callToAction

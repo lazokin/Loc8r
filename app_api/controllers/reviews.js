@@ -30,7 +30,7 @@ var doAddReview = function(req, res, location) {
 
 var updateAverageRating = function(locationid) {
   Loc
-    .findById(location)
+    .findById(locationid)
     .select('rating reviews')
     .exec(
       function(err, location) {
@@ -41,7 +41,7 @@ var updateAverageRating = function(locationid) {
     );
 };
 
-var doSetAverageRating = function(locatio) {
+var doSetAverageRating = function(location) {
   var i, reviewCount, ratingAverage, ratingTotal;
   if (location.reviews && location.reviews.length > 0) {
     reviewCount = location.reviews.length;
@@ -62,7 +62,7 @@ var doSetAverageRating = function(locatio) {
 };
 
 module.exports.reviewsCreate = function(req, res) {
-  var locatioid = req.params.locatioid;
+  var locationid = req.params.locationid;
   if (locationid) {
     Loc
       .findById(locationid)
@@ -168,7 +168,7 @@ module.exports.reviewsDeleteOne = function(req, res) {
     return;
   }
   Loc
-    .findById(req.param.locationid)
+    .findById(req.params.locationid)
     .select('reviews')
     .exec(
       function(err, location) {

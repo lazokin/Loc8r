@@ -6,25 +6,14 @@ if (process.env.NODE_ENV == 'production') {
   apiOptions.server = "https://parmafindr.herokuapp.com"
 }
 
-var renderHomepage = function(req, res, responseBody) {
-  var message;
-  if(!(responseBody instanceof Array)) {
-    message = "API lookup error";
-    responseBody = [];
-  } else {
-    if (!responseBody.length) {
-      message = "No places found nearby";
-    }
-  }
+var renderHomepage = function(req, res) {
   res.render('locations-list', {
     title: 'ParmaFindr - the best parma near you',
     pageHeader: {
       title: 'ParmaFindr',
       strapline: 'Find the best chicken parmigiana near you!'
     },
-    locations: responseBody,
-    sidebar: 'Looking for a great parma? ParmaFindr helps you find the best chicken parmigiana near you. Prefer the chips on the side or some ham on the top? ParmaFindr will help you find the taste you\'re looking for.',
-    message: message
+    sidebar: 'Looking for a great parma? ParmaFindr helps you find the best chicken parmigiana near you. Prefer the chips on the side or some ham on the top? ParmaFindr will help you find the taste you\'re looking for.'
   });
 };
 
@@ -48,21 +37,10 @@ var renderReviewForm = function(req, res, locDetail) {
     pageHeader: {
       title: 'Review ' + locDetail.name
     },
-    error: req.query.err
+    error: req.query.err,
+    url: req.originalURL
   });
 };
-
-var _formatDistance = function (distance) {
-  var numDistance, unit;
-  if (distance > 1) {
-    numDistance = parseFloat(distance).toFixed(1);
-    unit = 'km';
-  } else {
-    numDistance = parseFloat(distance * 1000, 10);
-    unit = 'm';
-  }
-  return numDistance + unit;
-}
 
 var _showError = function (req, res, status) {
   var title, content;
@@ -104,28 +82,7 @@ var getLocationInfo = function(req, res, callback) {
 
 /* GET 'home' page */
 module.exports.homelist = function(req, res) {
-  var requestOptions, path;
-  path = "/api/locations";
-  requestOptions = {
-    url: apiOptions.server + path,
-    method: "GET",
-    json: {},
-    qs: {
-      lat: -37.81437,
-      lng: 144.939787,
-      maxDistance: 20
-    }
-  };
-  request(requestOptions, function(err, response, body) {
-    var i, data;
-    data = body;
-    if (response.statusCode == 200 & data.length > 0) {
-      for (i = 0; i < data.length; i++) {
-        data[i].distance = _formatDistance(data[i].distance);
-      }
-    }
-    renderHomepage(req, res, data);
-  });
+  renderHomepage(req, res);
 };
 
 /* GET 'Location info' page */

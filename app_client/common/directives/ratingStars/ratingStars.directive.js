@@ -13,5 +13,5 @@
       templateUrl: '/common/directives/ratingStars/ratingStars.template.html'
     };
   };
-  
+
 })();

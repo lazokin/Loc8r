@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var ctrlLocations = require('../controllers/locations');
-var ctrlReviews = require('../controllers/reviews')
+var ctrlReviews = require('../controllers/reviews');
+var ctrlAuth = require('../controllers/authentication');
 
 // locations
 router.get(
@@ -41,6 +42,16 @@ router.put(
 router.delete(
   '/locations/:locationid/reviews/:reviewid',
   ctrlReviews.reviewsDeleteOne
+);
+
+// authentication
+router.post(
+  '/register',
+  ctrlAuth.register
+);
+router.post(
+  '/login',
+  ctrlAuth.login
 );
 
 module.exports = router;

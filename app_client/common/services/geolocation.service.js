@@ -1,4 +1,4 @@
-(function(){
+(function (){
 
   angular
     .module('loc8rApp')
@@ -16,5 +16,5 @@
       getPosition: getPosition
     };
   };
-  
+
 })();

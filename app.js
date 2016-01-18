@@ -59,6 +59,15 @@ app.use(function(req, res) {
   res.sendfile(path.join(__dirname, 'app_client', 'index.html'));
 });
 
+// error handlers
+
+// catch unauthorized users
+app.use(function(err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401);
+    res.json({"message" : err.name + ": " + err.message});
+  }
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -66,8 +75,6 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
-
-// error handlers
 
 // development error handler
 // will print stacktrace
